@@ -20,6 +20,9 @@ public class UserService {
                 .name(userDto.getName())
                 .email(userDto.getEmail())
                 .password(userDto.getPassword()) // Na razie czysty tekst, potem dodamy szyfrowanie
+                .age(userDto.getAge())
+                .gender(userDto.getGender())
+                .city(userDto.getCity())
                 .build();
 
         return userRepository.save(user);

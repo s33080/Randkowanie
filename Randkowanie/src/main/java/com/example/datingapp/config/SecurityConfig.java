@@ -19,6 +19,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll() // Publiczne
                         .requestMatchers("/api/v1/users/register").permitAll() // Pozwalamy każdemu się zarejestrować
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated() // Reszta wymaga logowania
                 )
                 .httpBasic(withDefaults()) // Włączamy proste logowanie (Basic Auth)
