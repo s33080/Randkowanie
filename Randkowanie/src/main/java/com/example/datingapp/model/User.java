@@ -41,4 +41,10 @@ public class User {
     private String photoUrl;
 
     private String interests;
+
+    //Search preferences
+    private Gender preferredGender;
+    private int preferredMinAge;
+    private int preferredMaxAge;
+    private String preferredCity;
 }

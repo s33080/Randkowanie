@@ -26,4 +26,9 @@ public class UserController {
     public ResponseEntity<Integer> getCountInCity(@RequestParam String city) {
         return ResponseEntity.ok(userService.getUsersCountByCity(city));
     } //Zwraca liczbę osób w danym mieście na stronę
+
+    @PostMapping("/{likerId}/like/{likedId}")
+    public ResponseEntity<String> likeUser(@PathVariable Long likerId, @PathVariable Long likedId) {
+        return ResponseEntity.ok(userService.likeUser(likerId, likedId));
+    }
 }
