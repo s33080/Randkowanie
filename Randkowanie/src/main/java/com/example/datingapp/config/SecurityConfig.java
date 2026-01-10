@@ -11,7 +11,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
+    // wymóg 5.1 - security
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -19,8 +19,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll() // Publiczne
                         .requestMatchers("/api/v1/users/register").permitAll() // Pozwalamy każdemu się zarejestrować
-                        .requestMatchers("/error").permitAll()
-                        .anyRequest().authenticated() // Reszta wymaga logowania
+                        .requestMatchers("/error").permitAll()      //pokazuje errory
+                        .requestMatchers("/api/v1/users/stats/count").permitAll()   //pokazuje liczbe osob w danym miescie
+                        .anyRequest().authenticated() // Wszystko inne wymaga zalogowania
                 )
                 .httpBasic(withDefaults()) // Włączamy proste logowanie (Basic Auth)
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin())); // Potrzebne do konsoli H2

@@ -1,5 +1,6 @@
 package com.example.datingapp.dto;
 
+import com.example.datingapp.model.Gender;
 import lombok.Data;
 import jakarta.validation.constraints.*;
 
@@ -19,8 +20,8 @@ public class UserDTO {
     @Max(value = 120, message = "Niepoprawny wiek")
     private int age;
 
-    @NotBlank(message = "Płeć jest wymagana")
-    private String gender; //  MALE, FEMALE, OTHER
+    @NotNull(message = "Płeć jest wymagana")
+    private Gender gender;
 
     @NotBlank(message = "Miasto jest wymagane")
     private String city;

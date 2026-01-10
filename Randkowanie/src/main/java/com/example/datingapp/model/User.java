@@ -5,22 +5,23 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-@Entity
-@Table(name = "users")
+@Entity // Mówi Springowi, że ta klasa to tabela w bazie danych (wymóg 1.1)
+@Table(name = "users") // Nadaje nazwę tabeli w SQL
+// Lombok: generuje metody dostępowe, by nie pisać ich ręcznie
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@Builder // User.builder().name("Mary").build()
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id //klucz główny
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //numeracja automatyczna
     private Long id;
 
-    @Email(message = "Niepoprawny format adresu e-mail")
-    @NotBlank(message = "E-mail nie może być pusty")
-    @Column(nullable = false, unique = true) //unikalny email o wzorze coś@jakiśmail.com
+    @Email(message = "Niepoprawny format adresu e-mail") // Walidacja formatu e-mail (wymóg 3.1)
+    @NotBlank(message = "E-mail nie może być pusty")    //jakby ktoś nie wpisał nic
+    @Column(nullable = false, unique = true) //unikalny email o wzorze coś@jakiśmail.com, unikalny
     private String email;
 
     @Column(nullable = false)
@@ -28,7 +29,10 @@ public class User {
 
     private String name;
     private int age;
-    private String gender; // płeć
+
+    @Enumerated(EnumType.STRING) // W bazie zostanie zapisane "MALE" zamiast liczby 0
+    private Gender gender;
+
     private String city;
 
     @Column(length = 1000)

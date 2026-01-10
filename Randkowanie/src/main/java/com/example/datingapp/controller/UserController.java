@@ -21,4 +21,9 @@ public class UserController {
         User savedUser = userService.registerNewUser(userDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED); // Zwracamy kod 201 Created
     }
+
+    @GetMapping("/stats/count")
+    public ResponseEntity<Integer> getCountInCity(@RequestParam String city) {
+        return ResponseEntity.ok(userService.getUsersCountByCity(city));
+    } //Zwraca liczbę osób w danym mieście na stronę
 }
