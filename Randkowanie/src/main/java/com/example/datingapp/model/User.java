@@ -38,7 +38,7 @@ public class User {
     @Column(length = 1000)
     private String bio;
 
-    private String photoUrl;
+    private String imagePath;
 
     private String interests;
 

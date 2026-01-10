@@ -15,10 +15,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Pozwala logować użytkownika po mailu
     Optional<User> findByEmail(String email);
 
-    @Query("SELECT u FROM User u WHERE u.gender = :gender " + // Zmieniamy IN na =
+    @Query("SELECT u FROM User u WHERE u.gender = :gender " +
             "AND u.age BETWEEN :minAge AND :maxAge " +
             "AND (:city IS NULL OR u.city = :city) " +
-            "AND u.id != :excludedId")
+            "AND u.id != :excludedId " +
+            "AND u.id NOT IN (SELECT l.liked.id FROM UserLike l WHERE l.liker.id = :excludedId)"
+    )
     List<User> findRecommendedUsers(
             @Param("gender") Gender gender,
             @Param("minAge") int minAge,

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor // To realizuje wstrzykiwanie zależności przez konstruktor (wymóg 3.3)
@@ -41,6 +42,7 @@ public class UserService {
         return userStatsRepository.countUsersInCity(city);
     }
 
+
     @Transactional
     public String likeUser(Long likerId, Long likedId) {
         if (likerId.equals(likedId)) return "Jak?";
@@ -66,5 +68,22 @@ public class UserService {
         }
 
         return "Polubiono użytkownika!";
+    }
+
+
+    @Transactional
+    public void setProfileImage(Long userId, String fileName) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
+        user.setImagePath(fileName);
+        // userRepository.save(user); // Przy @Transactional save() wykona się samo
+    }
+
+
+    public List<User> getUserMatches(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("Użytkownik nie istnieje");
+        }
+        return likeRepository.findAllMatchesForUser(userId);
     }
 }
