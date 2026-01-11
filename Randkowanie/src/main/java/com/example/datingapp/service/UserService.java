@@ -128,4 +128,19 @@ public class UserService {
     public User saveUser(User user) {
         return userRepository.save(user);
     }
+
+    public List<User> getMatches(Long userId) {
+        // Pobieramy ID osób, które polubił  użytkownik
+        List<Long> likedByMe = userRepository.findLikedUserIds(userId);
+
+        // Pobieramy ID osób, które polubiły użytkownika
+        List<Long> likedMe = userRepository.findUserIdsWhoLikedMe(userId);
+
+        // Część wspólna to matche
+        List<Long> matchIds = likedByMe.stream()
+                .filter(likedMe::contains)
+                .toList();
+
+        return userRepository.findAllById(matchIds);
+    }
 }

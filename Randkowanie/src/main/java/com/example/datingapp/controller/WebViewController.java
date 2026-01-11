@@ -61,4 +61,13 @@ public class WebViewController {
         return "redirect:/?currentUserId=" + user.getId();
     }
 
+    @GetMapping("/matches")
+    public String showMatches(@RequestParam Long currentUserId, Model model) {
+        User currentUser = userService.getUserById(currentUserId);
+        List<User> matches = userService.getMatches(currentUserId);
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("matches", matches);
+        return "matches";
+    }
 }

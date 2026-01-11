@@ -15,7 +15,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Pozwala logować użytkownika po mailu
     Optional<User> findByEmail(String email);
 
-    @Query("SELECT u FROM User u WHERE u.gender = :gender " +
+    @Query(value = "SELECT u FROM User u WHERE u.gender = :gender " +
             "AND u.age BETWEEN :minAge AND :maxAge " +
             "AND (:city IS NULL OR u.city = :city) " +
             "AND u.id != :excludedId " +
@@ -28,6 +28,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("city") String city,
             @Param("excludedId") Long excludedId
     );
+    // Znajdź ID wszystkich osób, które polubił dany użytkownik
+    @Query(value = "SELECT liked_id FROM user_likes WHERE liker_id = :userId", nativeQuery = true)
+    List<Long> findLikedUserIds(@Param("userId") Long userId);
+
+    // Znajdź ID wszystkich osób, które polubiły tego użytkownika
+    @Query(value = "SELECT liker_id FROM user_likes WHERE liked_id = :userId", nativeQuery = true)
+    List<Long> findUserIdsWhoLikedMe(@Param("userId") Long userId);
 }
 /*
 JpaRepository dostarcza gotowe operacje CRUD (Create, Read, Update, Delete),

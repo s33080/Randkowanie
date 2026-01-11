@@ -25,6 +25,9 @@
             </select>
         </form>
     </div>
+    <a th:if="${currentUser != null}"
+       th:href="@{/matches(currentUserId=${currentUser.id})}"
+       class="btn btn-outline-light ms-3">Twoje Pary 🔥</a>
 </nav>
 
 <div class="container">
@@ -67,6 +70,30 @@
         </div>
     </div>
 </div>
+<script>
+    function likeUser(likedId) {
+        // Pobieramy ID aktualnie zalogowanego użytkownika
+        const currentUserId = document.querySelector('select[name="currentUserId"]').value;
 
+        if (!currentUserId) {
+            alert("Najpierw wybierz, jako kto chcesz się zalogować (na górze strony)!");
+            return;
+        }
+
+        // Wysyłamy żądanie do API
+        fetch(`/api/v1/users/${currentUserId}/like/${likedId}`, {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert("Polubiono!");
+                    // TODO: Znikanie karty - może?
+                } else {
+                    alert("Coś poszło nie tak...");
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
 </body>
 </html>
