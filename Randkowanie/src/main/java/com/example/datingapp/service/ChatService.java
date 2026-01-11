@@ -46,4 +46,5 @@ public class ChatService {
     public List<ChatMessage> getChatHistory(Long u1, Long u2) {
         return messageRepository.findChatHistory(u1, u2);
     }
+
 }

@@ -97,4 +97,31 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+
+    public List<User> getSmartRecommendations(Long userId) {
+        User currentUser = userRepository.findById(userId).orElseThrow();
+        List<User> allUsers = userRepository.findAll();
+
+        return allUsers.stream()
+                .filter(u -> !u.getId().equals(userId)) // Nie pokazuje zalogowanego użytkownika
+                .sorted((u1, u2) -> {
+                    long score1 = countCommonInterests(currentUser, u1);
+                    long score2 = countCommonInterests(currentUser, u2);
+                    return Long.compare(score2, score1); // Sortuj malejąco (więcej wspólnych = wyżej)
+                })
+                .toList();
+    }
+
+    private long countCommonInterests(User user1, User user2) {
+        if (user1.getInterests() == null || user2.getInterests() == null) return 0;
+        return user1.getInterests().stream()
+                .filter(user2.getInterests()::contains)
+                .count();
+    }
+
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika o ID: " + id));
+    }
 }

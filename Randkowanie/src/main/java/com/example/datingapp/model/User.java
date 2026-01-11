@@ -7,7 +7,9 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity // Mówi Springowi, że ta klasa to tabela w bazie danych (wymóg 1.1)
 @Table(name = "users") // Nadaje nazwę tabeli w SQL
@@ -44,12 +46,19 @@ public class User {
 
     private String profileImageUrl;
 
-    private String interests;
+    @ElementCollection(fetch = FetchType.EAGER) // Eager, żebyśmy zawsze mieli tagi pod ręką
+    @CollectionTable(name = "user_interests", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "interest")
+    private Set<String> interests = new HashSet<>();
 
     //Search preferences
+    @Enumerated(EnumType.STRING) //męczybuła
     private Gender preferredGender;
+
     private int preferredMinAge;
+
     private int preferredMaxAge;
+
     private String preferredCity;
 
     // SNAP THANOSA

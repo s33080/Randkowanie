@@ -1,4 +1,4 @@
--- 1. Tabela Użytkowników
+-- 1. Użytkownicy
 CREATE TABLE users (
                        id BIGSERIAL PRIMARY KEY,
                        email VARCHAR(255) UNIQUE NOT NULL,
@@ -15,7 +15,13 @@ CREATE TABLE users (
                        preferred_city VARCHAR(100)
 );
 
--- 2. Tabela Polubień z KASKADĄ
+-- 2. Zainteresowania (Kluczowe dla algorytmu!)
+CREATE TABLE user_interests (
+                                user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+                                interest VARCHAR(100)
+);
+
+-- 3. Polubienia
 CREATE TABLE user_likes (
                             id BIGSERIAL PRIMARY KEY,
                             liker_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
@@ -23,7 +29,7 @@ CREATE TABLE user_likes (
                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. Tabela Wiadomości z KASKADĄ
+-- 4. Wiadomości
 CREATE TABLE chat_messages (
                                id BIGSERIAL PRIMARY KEY,
                                sender_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
