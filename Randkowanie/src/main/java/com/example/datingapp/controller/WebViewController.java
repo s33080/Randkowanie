@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -22,22 +24,34 @@ public class WebViewController {
 //        model.addAttribute("users", userService.getAllUsers());
 //        return "index"; // Szuka pliku index.html w folderze templates
 //    }
-@GetMapping("/")
-public String index(@RequestParam(required = false) Long currentUserId, Model model) {
-    List<User> users;
-    User currentUser = null;
+    @GetMapping("/")
+    public String index(@RequestParam(required = false) Long currentUserId, Model model) {
+        List<User> users;
+        User currentUser = null;
 
-    if (currentUserId != null) {
-        // Używamy Twojego nowego algorytmu rekomendacji!
-        users = userService.getSmartRecommendations(currentUserId);
-        currentUser = userService.getUserById(currentUserId);
-    } else {
-        users = userService.getAllUsers();
+        if (currentUserId != null) {
+            // Używamy Twojego nowego algorytmu rekomendacji!
+            users = userService.getSmartRecommendations(currentUserId);
+            currentUser = userService.getUserById(currentUserId);
+        } else {
+            users = userService.getAllUsers();
+        }
+
+        model.addAttribute("users", users);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("allUsers", userService.getAllUsers()); // Do przełącznika profili
+        return "index";
+    }
+    @GetMapping("/register")
+    public String showRegisterForm(Model model) {
+        model.addAttribute("user", new User());
+        return "register";
     }
 
-    model.addAttribute("users", users);
-    model.addAttribute("currentUser", currentUser);
-    model.addAttribute("allUsers", userService.getAllUsers()); // Do przełącznika profili
-    return "index";
-}
+    @PostMapping("/register")
+    public String registerUser(@ModelAttribute User user) {
+        // Zapisujemy użytkownika i wracamy na stronę główną
+        userService.saveUser(user);
+        return "redirect:/?currentUserId=" + user.getId();
+    }
 }

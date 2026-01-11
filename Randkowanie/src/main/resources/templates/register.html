@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dołącz do nas! ❤️</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 card shadow p-4">
+            <h2 class="text-center mb-4">Stwórz swój profil</h2>
+            <form th:action="@{/register}" th:object="${user}" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Imię</label>
+                    <input type="text" th:field="*{name}" class="form-control" required>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" th:field="*{email}" class="form-control" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Hasło</label>
+                        <input type="password" th:field="*{password}" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Wiek</label>
+                        <input type="number" th:field="*{age}" class="form-control" min="18">
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Miasto</label>
+                        <input type="text" th:field="*{city}" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Link do zdjęcia profilowego</label>
+                    <input type="url" th:field="*{profileImageUrl}" class="form-control" placeholder="https://...">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Bio</label>
+                    <textarea th:field="*{bio}" class="form-control" rows="3"></textarea>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-danger">Zarejestruj się i zacznij randkować!</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

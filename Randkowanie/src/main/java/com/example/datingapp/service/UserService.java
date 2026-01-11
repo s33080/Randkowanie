@@ -124,4 +124,8 @@ public class UserService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika o ID: " + id));
     }
+
+    public User saveUser(User user) {
+        return userRepository.save(user);
+    }
 }
