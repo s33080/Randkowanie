@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>DatingApp - Odkrywaj</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .user-card { width: 18rem; margin: 20px; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .user-img { height: 250px; object-fit: cover; }
+    </style>
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-dark bg-danger mb-4">
+    <div class="container">
+        <span class="navbar-brand mb-0 h1">DatingApp ❤️</span>
+    </div>
+</nav>
+
+<div class="container">
+    <h2 class="mb-4">Odkryj nowe osoby w Twojej okolicy</h2>
+    <div class="row">
+        <div class="card user-card" th:each="user : ${users}">
+            <img th:src="${user.profileImageUrl != null ? user.profileImageUrl : 'https://via.placeholder.com/250'}"
+                 class="card-img-top user-img" alt="Zdjęcie profilowe">
+            <div class="card-body">
+                <h5 class="card-title" th:text="${user.name} + ', ' + ${user.age}">Imię, Wiek</h5>
+                <p class="card-text text-muted" th:text="${user.city}">Miasto</p>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-outline-secondary">❌</button>
+                    <button class="btn btn-outline-danger">❤️</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

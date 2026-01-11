@@ -94,4 +94,7 @@ public class UserService {
         }
         userRepository.deleteById(id);
     }
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 }
