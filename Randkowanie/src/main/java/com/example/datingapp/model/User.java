@@ -1,9 +1,13 @@
 package com.example.datingapp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity // Mówi Springowi, że ta klasa to tabela w bazie danych (wymóg 1.1)
 @Table(name = "users") // Nadaje nazwę tabeli w SQL
@@ -38,7 +42,7 @@ public class User {
     @Column(length = 1000)
     private String bio;
 
-    private String imagePath;
+    private String profileImageUrl;
 
     private String interests;
 
@@ -47,4 +51,31 @@ public class User {
     private int preferredMinAge;
     private int preferredMaxAge;
     private String preferredCity;
+
+    // SNAP THANOSA
+
+    // Kaskadowo usuwamy polubienia, które wysłał ten użytkownik
+    @JsonIgnore // Przeklęta pętla naprawiona
+    @OneToMany(mappedBy = "liker", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserLike> sentLikes = new ArrayList<>();
+
+    // Kaskadowo usuwamy polubienia, które ten użytkownik otrzymał
+    @JsonIgnore
+    @OneToMany(mappedBy = "liked", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserLike> receivedLikes = new ArrayList<>();
+
+    // Kaskadowo usuwamy wysłane wiadomości
+    @JsonIgnore
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatMessage> sentMessages = new ArrayList<>();
+
+    // Kaskadowo usuwamy odebrane wiadomości
+    @JsonIgnore
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatMessage> receivedMessages = new ArrayList<>();
+
+    /*
+    Orphan Removal oraz CascadeType.ALL. Dzięki temu system automatycznie
+    dba o spójność danych (referential integrity) na poziomie aplikacji
+     */
 }

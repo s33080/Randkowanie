@@ -3,6 +3,7 @@ package com.example.datingapp.controller;
 import com.example.datingapp.dto.UserDTO;
 import com.example.datingapp.model.Gender;
 import com.example.datingapp.model.User;
+import com.example.datingapp.repository.UserRepository;
 import com.example.datingapp.service.RecommendationService;
 import com.example.datingapp.service.UserService;
 import jakarta.validation.Valid;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import com.example.datingapp.service.ImageService;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,8 +23,8 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-    private final ImageService imageService;
     private final RecommendationService recommendationService;
+    private final UserRepository userRepository;
 
     @PostMapping("/register")
     public ResponseEntity<User> registerUser(@Valid @RequestBody UserDTO userDto) {
@@ -47,14 +47,13 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserMatches(id));
     }
 
-    @PostMapping("/{id}/upload-image")
-    public ResponseEntity<String> uploadImage(@PathVariable Long id, @RequestParam("file") MultipartFile file) throws IOException {
-        String fileName = imageService.saveImage(file, id);
-
-        // Używamy już wstrzykniętego userService zamiast repozytorium
-        userService.setProfileImage(id, fileName);
-
-        return ResponseEntity.ok("Zdjęcie zapisane jako: " + fileName);
+    @PatchMapping("/{id}/profile-image")
+    public ResponseEntity<String> updateProfileImage(@PathVariable Long id, @RequestBody String imageUrl) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
+        user.setProfileImageUrl(imageUrl);
+        userRepository.save(user);
+        return ResponseEntity.ok("Link do zdjęcia został zaktualizowany!");
     }
 
     @GetMapping("/{id}/recommendations")
@@ -67,5 +66,11 @@ public class UserController {
 
         // To wywołuje logikę z serwisu
         return ResponseEntity.ok(recommendationService.getRecommendations(id, targetGender, minAge, maxAge, city));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok("Użytkownik o ID " + id + " oraz wszystkie jego dane (lajki, wiadomości) zostały usunięte.");
     }
 }

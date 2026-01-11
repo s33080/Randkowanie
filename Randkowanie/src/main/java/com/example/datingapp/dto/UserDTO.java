@@ -25,4 +25,6 @@ public class UserDTO {
 
     @NotBlank(message = "Miasto jest wymagane")
     private String city;
+
+    private String profileImageUrl;
 }

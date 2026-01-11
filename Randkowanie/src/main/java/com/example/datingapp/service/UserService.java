@@ -71,13 +71,13 @@ public class UserService {
     }
 
 
-    @Transactional
-    public void setProfileImage(Long userId, String fileName) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
-        user.setImagePath(fileName);
-        // userRepository.save(user); // Przy @Transactional save() wykona się samo
-    }
+//    @Transactional
+//    public void setProfileImage(Long userId, String fileName) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
+//        user.setImagePath(fileName);
+//        // Stare
+//    }
 
 
     public List<User> getUserMatches(Long userId) {
@@ -85,5 +85,13 @@ public class UserService {
             throw new RuntimeException("Użytkownik nie istnieje");
         }
         return likeRepository.findAllMatchesForUser(userId);
+    }
+
+    @Transactional
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("Użytkownik o podanym ID nie istnieje");
+        }
+        userRepository.deleteById(id);
     }
 }
