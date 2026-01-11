@@ -41,7 +41,15 @@
                 <h5 class="card-title fw-bold">
                     <span th:text="${user.name}"></span>, <span th:text="${user.age}"></span>
                 </h5>
-                <p class="text-muted mb-2 small"><i class="bi bi-geo-alt"></i> <span th:text="${user.city}"></span></p>
+                <p class="text-muted mb-2 small">
+                    <i class="bi bi-geo-alt"></i> <span th:text="${user.city}"></span>
+                </p>
+
+                <p class="card-text mt-3 mb-3 text-secondary italic"
+                   style="font-style: italic; min-height: 50px;"
+                   th:text="${user.bio}">
+                    Tutaj pojawi się krótki opis użytkownika...
+                </p>
 
                 <div class="mb-3">
                     <div th:each="interest : ${user.interests}"
@@ -50,9 +58,10 @@
                     </div>
                 </div>
 
-                <div class="d-grid gap-2 d-md-block">
+                <div class="d-grid gap-2 d-md-block mt-3">
                     <button class="btn btn-outline-secondary rounded-circle">❌</button>
-                    <button class="btn btn-outline-danger rounded-circle">❤️</button>
+                    <button class="btn btn-outline-danger rounded-circle"
+                            th:onclick="'likeUser(' + ${user.id} + ')'">❤️</button>
                 </div>
             </div>
         </div>

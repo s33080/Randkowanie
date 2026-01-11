@@ -42,6 +42,18 @@
                     <label class="form-label">Bio</label>
                     <textarea th:field="*{bio}" class="form-control" rows="3"></textarea>
                 </div>
+                <div class="mb-3">
+                    <label class="form-label d-block">Twoje zainteresowania:</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        <div th:each="interest : ${allInterests}" class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox"
+                                   th:field="*{interests}"
+                                   th:value="${interest}"
+                                   th:id="${'interest-' + interest}">
+                            <label class="form-check-label" th:for="${'interest-' + interest}" th:text="${interest}"></label>
+                        </div>
+                    </div>
+                </div>
                 <div class="d-grid">
                     <button type="submit" class="btn btn-danger">Zarejestruj się i zacznij randkować!</button>
                 </div>

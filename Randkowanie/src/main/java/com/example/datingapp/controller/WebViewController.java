@@ -45,6 +45,12 @@ public class WebViewController {
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
+        // Lista dostępnych tagów
+        model.addAttribute("allInterests", List.of(
+                "Sport", "Kino", "Podróże", "Informatyka",
+                "Gry", "Książki", "Gotowanie", "Muzyka", "Fotografia",
+                "DIY", "Medycyna", "Psychologia", "Zwierzęta", "Psy",
+                "Koty", "Akwarystyka", "Wędkowanie", "Motoryzacja"));
         return "register";
     }
 
@@ -54,4 +60,5 @@ public class WebViewController {
         userService.saveUser(user);
         return "redirect:/?currentUserId=" + user.getId();
     }
+
 }
