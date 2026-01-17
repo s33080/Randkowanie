@@ -101,10 +101,13 @@ public class UserService {
 
     public List<User> getSmartRecommendations(Long userId) {
         User currentUser = userRepository.findById(userId).orElseThrow();
+        List<Long> alreadyLikedIds = userRepository.findLikedUserIds(userId);
         List<User> allUsers = userRepository.findAll();
+
 
         return allUsers.stream()
                 .filter(u -> !u.getId().equals(userId)) // Nie pokazuje zalogowanego użytkownika
+                .filter(u -> !alreadyLikedIds.contains(u.getId())) //Polubione już się nie pokazują
                 .sorted((u1, u2) -> {
                     long score1 = countCommonInterests(currentUser, u1);
                     long score2 = countCommonInterests(currentUser, u2);

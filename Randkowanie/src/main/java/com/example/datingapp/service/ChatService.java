@@ -21,8 +21,10 @@ public class ChatService {
 
     @Transactional
     public String sendMessage(Long senderId, Long recipientId, String content) {
-        User sender = userRepository.findById(senderId).orElseThrow();
-        User recipient = userRepository.findById(recipientId).orElseThrow();
+        User sender = userRepository.findById(senderId)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono nadawcy"));
+        User recipient = userRepository.findById(recipientId)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono odbiorcy"));
 
         // Kluczowa blokada biznesowa:
         boolean isMatch = likeRepository.existsByLikerAndLiked(sender, recipient) &&
@@ -46,5 +48,4 @@ public class ChatService {
     public List<ChatMessage> getChatHistory(Long u1, Long u2) {
         return messageRepository.findChatHistory(u1, u2);
     }
-
 }

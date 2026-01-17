@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>DatingApp ❤️</title>
+    <title>DatingApp - Randkowanie</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .user-card { width: 19rem; border-radius: 15px; transition: transform 0.2s; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -15,7 +15,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm mb-4">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="/">DatingApp ❤️</a>
+        <a class="navbar-brand fw-bold" href="/">DatingApp - Randkowanie</a>
         <form class="d-flex align-items-center" method="get" action="/">
             <span class="text-white me-2 small">Zaloguj jako:</span>
             <select name="currentUserId" class="form-select form-select-sm" onchange="this.form.submit()">
@@ -62,10 +62,17 @@
                 </div>
 
                 <div class="d-grid gap-2 d-md-block mt-3">
-                    <button class="btn btn-outline-secondary rounded-circle">❌</button>
-                    <button class="btn btn-outline-danger rounded-circle"
-                            th:onclick="'likeUser(' + ${user.id} + ')'">❤️</button>
+                    <a th:href="@{/(currentUserId=${currentUser.id})}"
+                       class="btn btn-outline-secondary rounded-circle">❌</a>
+
+                    <a th:href="@{/like(likerId=${currentUser.id}, likedId=${user.id})}"
+                       class="btn btn-outline-danger rounded-circle">❤️</a>
                 </div>
+<!--                <div class="d-grid gap-2 d-md-block mt-3">-->
+<!--                    <button class="btn btn-outline-secondary rounded-circle">❌</button>-->
+<!--                    <button class="btn btn-outline-danger rounded-circle"-->
+<!--                            th:onclick="'likeUser(' + ${user.id} + ')'">❤️</button>-->
+<!--                </div>-->
             </div>
         </div>
     </div>

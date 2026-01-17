@@ -26,8 +26,8 @@ public class User {
     private Long id;
 
     @Email(message = "Niepoprawny format adresu e-mail") // Walidacja formatu e-mail (wymóg 3.1)
-    @NotBlank(message = "E-mail nie może być pusty")    //jakby ktoś nie wpisał nic
-    @Column(nullable = false, unique = true) //unikalny email o wzorze coś@jakiśmail.com, unikalny
+    @NotBlank(message = "E-mail nie może być pusty")
+    @Column(nullable = false, unique = true) //unikalny email o wzorze coś@jakiśmail.com
     private String email;
 
     @Column(nullable = false)
@@ -63,22 +63,22 @@ public class User {
 
     // SNAP THANOSA
 
-    // Kaskadowo usuwamy polubienia, które wysłał ten użytkownik
+    // Kaskadowo usuwa polubienia, które wysłał ten użytkownik
     @JsonIgnore // Przeklęta pętla naprawiona
     @OneToMany(mappedBy = "liker", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserLike> sentLikes = new ArrayList<>();
 
-    // Kaskadowo usuwamy polubienia, które ten użytkownik otrzymał
+    // Kaskadowo usuwa polubienia, które ten użytkownik otrzymał
     @JsonIgnore
     @OneToMany(mappedBy = "liked", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserLike> receivedLikes = new ArrayList<>();
 
-    // Kaskadowo usuwamy wysłane wiadomości
+    // Kaskadowo usuwa wysłane wiadomości
     @JsonIgnore
     @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> sentMessages = new ArrayList<>();
 
-    // Kaskadowo usuwamy odebrane wiadomości
+    // Kaskadowo usuwa odebrane wiadomości
     @JsonIgnore
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> receivedMessages = new ArrayList<>();
