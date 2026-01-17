@@ -62,17 +62,12 @@
                 </div>
 
                 <div class="d-grid gap-2 d-md-block mt-3">
-                    <a th:href="@{/(currentUserId=${currentUser.id})}"
+                    <a th:href="@{/dislike(likerId=${currentUser.id}, likedId=${user.id})}"
                        class="btn btn-outline-secondary rounded-circle">❌</a>
 
                     <a th:href="@{/like(likerId=${currentUser.id}, likedId=${user.id})}"
                        class="btn btn-outline-danger rounded-circle">❤️</a>
                 </div>
-<!--                <div class="d-grid gap-2 d-md-block mt-3">-->
-<!--                    <button class="btn btn-outline-secondary rounded-circle">❌</button>-->
-<!--                    <button class="btn btn-outline-danger rounded-circle"-->
-<!--                            th:onclick="'likeUser(' + ${user.id} + ')'">❤️</button>-->
-<!--                </div>-->
             </div>
         </div>
     </div>
@@ -94,7 +89,6 @@
             .then(response => {
                 if (response.ok) {
                     alert("Polubiono!");
-                    // TODO: Znikanie karty - może?
                 } else {
                     alert("Coś poszło nie tak...");
                 }

@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="d-grid gap-2 d-md-block mt-3">
-                    <a th:href="@{/(currentUserId=${currentUser.id})}"
+                    <a th:href="@{/dislike(likerId=${currentUser.id}, likedId=${user.id})}"
                        class="btn btn-outline-secondary rounded-circle">❌</a>
 
                     <a th:href="@{/like(likerId=${currentUser.id}, likedId=${user.id})}"

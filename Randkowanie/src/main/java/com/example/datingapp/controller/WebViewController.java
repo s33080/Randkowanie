@@ -114,4 +114,10 @@ public class WebViewController {
         // Dzięki temu getSmartRecommendations odpali się jeszcze raz i ukryje tę osobę
         return "redirect:/?currentUserId=" + likerId;
     }
+
+    @GetMapping("/dislike")
+    public String dislikeUser(@RequestParam Long likerId, @RequestParam Long likedId) {
+        userService.rejectUser(likerId, likedId);
+        return "redirect:/?currentUserId=" + likerId;
+    }
 }

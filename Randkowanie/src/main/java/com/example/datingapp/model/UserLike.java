@@ -18,5 +18,8 @@ public class UserLike {
     @ManyToOne // Wiele osób może polubić tego samego użytkownika
     private User liked; // Kto został polubiony
 
+    @Column(name = "is_rejected")
+    private boolean isRejected = false;
+
     private LocalDateTime createdAt;
 }

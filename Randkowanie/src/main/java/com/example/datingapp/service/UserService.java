@@ -69,7 +69,18 @@ public class UserService {
 
         return "Polubiono użytkownika!";
     }
+    @Transactional
+    public void rejectUser(Long likerId, Long likedId) {
+        User liker = userRepository.findById(likerId).orElseThrow();
+        User liked = userRepository.findById(likedId).orElseThrow();
 
+        UserLike dislike = new UserLike();
+        dislike.setLiker(liker);
+        dislike.setLiked(liked);
+        dislike.setRejected(true); // To jest kluczowe!
+
+        likeRepository.save(dislike);
+    }
 
 //    @Transactional
 //    public void setProfileImage(Long userId, String fileName) {
@@ -101,13 +112,13 @@ public class UserService {
 
     public List<User> getSmartRecommendations(Long userId) {
         User currentUser = userRepository.findById(userId).orElseThrow();
-        List<Long> alreadyLikedIds = userRepository.findLikedUserIds(userId);
+        List<Long> alreadyInteractedIds = userRepository.findLikedUserIds(userId);
         List<User> allUsers = userRepository.findAll();
 
 
         return allUsers.stream()
                 .filter(u -> !u.getId().equals(userId)) // Nie pokazuje zalogowanego użytkownika
-                .filter(u -> !alreadyLikedIds.contains(u.getId())) //Polubione już się nie pokazują
+                .filter(u -> !alreadyInteractedIds.contains(u.getId())) // Ukrywa i Like i Dislike
                 .sorted((u1, u2) -> {
                     long score1 = countCommonInterests(currentUser, u1);
                     long score2 = countCommonInterests(currentUser, u2);
