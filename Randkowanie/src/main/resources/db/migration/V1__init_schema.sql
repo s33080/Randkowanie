@@ -31,7 +31,7 @@ CREATE TABLE user_likes (
 );
 
 -- 4. Wiadomości
-CREATE TABLE chat_messages (git 
+CREATE TABLE chat_messages (
                                id BIGSERIAL PRIMARY KEY,
                                sender_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
                                recipient_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
