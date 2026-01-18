@@ -26,6 +26,7 @@ CREATE TABLE user_likes (
                             id BIGSERIAL PRIMARY KEY,
                             liker_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
                             liked_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+                            is_rejected BOOLEAN DEFAULT FALSE,
                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

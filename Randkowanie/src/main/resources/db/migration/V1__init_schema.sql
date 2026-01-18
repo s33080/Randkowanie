@@ -26,11 +26,12 @@ CREATE TABLE user_likes (
                             id BIGSERIAL PRIMARY KEY,
                             liker_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
                             liked_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
+                            is_rejected BOOLEAN DEFAULT FALSE,
                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 4. Wiadomości
-CREATE TABLE chat_messages (
+CREATE TABLE chat_messages (git 
                                id BIGSERIAL PRIMARY KEY,
                                sender_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
                                recipient_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
