@@ -24,30 +24,28 @@ public class WebViewController {
     private final ChatService chatService;
     private final UserRepository userRepository;
 
-//    @GetMapping("/")
-//    public String index(Model model) {
-//        // Przekazujemy listę użytkowników do strony HTML
-//        model.addAttribute("users", userService.getAllUsers());
-//        return "index"; // Szuka pliku index.html w folderze templates
-//    }
-@GetMapping("/")
-public String showUsers(Model model, Principal principal) {
-    // 1. Principal to obiekt od Spring Security, który trzyma maila zalogowanej osoby
-    String email = principal.getName();
+    @GetMapping("/")
+    public String showUsers(Model model, Principal principal) {
+        if (principal == null) {
+            return "redirect:/welcome"; // Jeśli nie jest zalogowany, wyślij na stronę startową
+        }
 
-    // 2. Znajdź użytkownika w bazie po mailu
-    User currentUser = userRepository.findByEmail(email)
-            .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
+        // 1. Principal to obiekt od Spring Security, który trzyma maila zalogowanej osoby
+        String email = principal.getName();
 
-    // 3. Przekaż jego dane i ID do widoku
-    model.addAttribute("currentUser", currentUser);
+        // 2. Znajdź użytkownika w bazie po mailu
+        User currentUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
 
-    // 4. Pobierz listę osób do wyświetlenia
-    List<User> users = userService.getSmartRecommendations(currentUser.getId());
-    model.addAttribute("users", users);
+        // 3. Przekaż jego dane i ID do widoku
+        model.addAttribute("currentUser", currentUser);
 
-    return "index"; // Twoja nazwa pliku HTML
-}
+        // 4. Pobierz listę osób do wyświetlenia
+        List<User> users = userService.getSmartRecommendations(currentUser.getId());
+        model.addAttribute("users", users);
+
+        return "index"; // Twoja nazwa pliku HTML
+    }
 
     @GetMapping("/welcome")
     public String welcome() {
