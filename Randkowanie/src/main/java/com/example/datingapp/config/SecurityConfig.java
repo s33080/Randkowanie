@@ -16,6 +16,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // Wyłączamy CSRF dla ułatwienia testów REST API
+                .formLogin(form -> form
+                        .defaultSuccessUrl("/", true) // Po logowaniu idź na stronę główną
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/welcome", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll() // Publiczne

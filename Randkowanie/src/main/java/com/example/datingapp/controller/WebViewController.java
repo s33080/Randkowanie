@@ -1,6 +1,7 @@
 package com.example.datingapp.controller;
 
 import com.example.datingapp.model.User;
+import com.example.datingapp.repository.UserRepository;
 import com.example.datingapp.service.ChatService;
 import com.example.datingapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -19,6 +22,7 @@ public class WebViewController {
 
     private final UserService userService;
     private final ChatService chatService;
+    private final UserRepository userRepository;
 
 //    @GetMapping("/")
 //    public String index(Model model) {
@@ -26,27 +30,24 @@ public class WebViewController {
 //        model.addAttribute("users", userService.getAllUsers());
 //        return "index"; // Szuka pliku index.html w folderze templates
 //    }
-    @GetMapping("/")
-    public String index(@RequestParam(required = false) Long currentUserId, Model model) {
-        List<User> users;
-        User currentUser = null;
+@GetMapping("/")
+public String showUsers(Model model, Principal principal) {
+    // 1. Principal to obiekt od Spring Security, który trzyma maila zalogowanej osoby
+    String email = principal.getName();
 
-        if (currentUserId != null) {
-            // Używamy algorytmu rekomendacji
-//            users = userService.getSmartRecommendations(currentUserId);
-//            currentUser = userService.getUserById(currentUserId);
-            List<User> recommendations = userService.getSmartRecommendations(currentUserId);
-            model.addAttribute("users", recommendations);
-            model.addAttribute("currentUser", userService.getUserById(currentUserId));
-        } else {
-            users = userService.getAllUsers();
-        }
+    // 2. Znajdź użytkownika w bazie po mailu
+    User currentUser = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
 
-        //model.addAttribute("users", users);
-        //model.addAttribute("currentUser", currentUser);
-        model.addAttribute("allUsers", userService.getAllUsers()); // Do przełącznika profili
-        return "index";
-    }
+    // 3. Przekaż jego dane i ID do widoku
+    model.addAttribute("currentUser", currentUser);
+
+    // 4. Pobierz listę osób do wyświetlenia
+    List<User> users = userService.getSmartRecommendations(currentUser.getId());
+    model.addAttribute("users", users);
+
+    return "index"; // Twoja nazwa pliku HTML
+}
 
     @GetMapping("/welcome")
     public String welcome() {
