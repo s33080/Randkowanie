@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -72,5 +73,14 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("Użytkownik o ID " + id + " oraz wszystkie jego dane (lajki, wiadomości) zostały usunięte.");
+    }
+
+    @PostMapping("/delete-my-account")
+    public String deleteAccount(Principal principal) {
+        // Spring sam wie kto jest zalogowany dzięki Basic Auth
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).get();
+        userService.deleteUser(user.getId());
+        return "redirect:/welcome?deleted=true";
     }
 }

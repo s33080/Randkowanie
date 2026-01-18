@@ -4,7 +4,9 @@ import com.example.datingapp.model.Gender;
 import com.example.datingapp.model.User;
 import com.example.datingapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.Set;
@@ -14,6 +16,7 @@ import java.util.Set;
 public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) {
@@ -37,20 +40,22 @@ public class DataInitializer implements CommandLineRunner {
         }
     }
 
-    private User createUser(String email, String name, int age, Gender gender, String city, Set<String> interests, String imgUrl) {
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword("password123"); // W prawdziwej aplikacji byłoby zakodowane
-        user.setName(name);
-        user.setAge(age);
-        user.setGender(gender);
-        user.setCity(city);
-        user.setInterests(interests);
-        user.setProfileImageUrl(imgUrl);
-        user.setBio("Cześć, jestem " + name + " i szukam kogoś do wspólnych pasji: " + String.join(", ", interests));
-        return user;
+    private User createUser(String email, String name, int age, Gender gender, String city, Set<String> interests, String photoUrl) {
+        return User.builder()
+                .email(email)
+                .name(name)
+                .age(age)
+                .gender(gender)
+                .city(city)
+                .interests(interests)
+                .profileImageUrl(photoUrl)
+                .password(passwordEncoder.encode("haslo")) // TUTAJ SZYFRUJEMY HASŁO
+                .build();
     }
+
 }
+
+
 
 /*
 Automatyzacja: Za każdym razem, gdy zrobisz docker-compose down -v, nie musisz się martwić o dane – po starcie Maria, Tomek i reszta będą już na Ciebie czekać.

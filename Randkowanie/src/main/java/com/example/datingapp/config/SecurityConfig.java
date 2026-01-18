@@ -17,6 +17,7 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable()) // Wyłączamy CSRF dla ułatwienia testów REST API
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/register", "/welcome", "/css/**", "/js/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll() // Publiczne
                         .requestMatchers("/api/v1/users/register").permitAll() // Pozwalamy każdemu się zarejestrować
                         .requestMatchers("/error").permitAll()      //pokazuje errory

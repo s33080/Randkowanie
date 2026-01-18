@@ -5,11 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity // Mówi Springowi, że ta klasa to tabela w bazie danych (wymóg 1.1)
 @Table(name = "users") // Nadaje nazwę tabeli w SQL
@@ -19,37 +18,65 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder // User.builder().name("Mary").build()
-public class User {
+public class User implements UserDetails {
 
     @Id //klucz główny
     @GeneratedValue(strategy = GenerationType.IDENTITY) //numeracja automatyczna
     private Long id;
-
     @Email(message = "Niepoprawny format adresu e-mail") // Walidacja formatu e-mail (wymóg 3.1)
     @NotBlank(message = "E-mail nie może być pusty")
     @Column(nullable = false, unique = true) //unikalny email o wzorze coś@jakiśmail.com
     private String email;
-
     @Column(nullable = false)
     private String password;
-
     private String name;
     private int age;
-
     @Enumerated(EnumType.STRING) // W bazie zostanie zapisane "MALE" zamiast liczby 0
     private Gender gender;
-
     private String city;
-
     @Column(length = 1000)
     private String bio;
-
     private String profileImageUrl;
+
+    @Override
+    public String getUsername() {
+        return this.email;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+       // return UserDetails.super.isAccountNonExpired();
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+//        return UserDetails.super.isAccountNonLocked();
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+//        return UserDetails.super.isCredentialsNonExpired();
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+//        return UserDetails.super.isEnabled();
+        return true;
+    }
 
     @ElementCollection(fetch = FetchType.EAGER) // Eager, żebyśmy zawsze mieli tagi pod ręką
     @CollectionTable(name = "user_interests", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "interest")
     private Set<String> interests = new HashSet<>();
+
 
     //Search preferences
     @Enumerated(EnumType.STRING) //męczybuła
@@ -82,6 +109,7 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatMessage> receivedMessages = new ArrayList<>();
+
 
     /*
     Orphan Removal oraz CascadeType.ALL. Dzięki temu system automatycznie

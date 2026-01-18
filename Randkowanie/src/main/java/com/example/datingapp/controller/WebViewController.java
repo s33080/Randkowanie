@@ -4,7 +4,6 @@ import com.example.datingapp.model.User;
 import com.example.datingapp.service.ChatService;
 import com.example.datingapp.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.List;
 
 @Controller
@@ -49,6 +47,12 @@ public class WebViewController {
         model.addAttribute("allUsers", userService.getAllUsers()); // Do przełącznika profili
         return "index";
     }
+
+    @GetMapping("/welcome")
+    public String welcome() {
+        return "welcome"; //  z przyciskiem "Zaloguj" i "Zarejestruj"
+    }
+
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
@@ -120,4 +124,5 @@ public class WebViewController {
         userService.rejectUser(likerId, likedId);
         return "redirect:/?currentUserId=" + likerId;
     }
+
 }

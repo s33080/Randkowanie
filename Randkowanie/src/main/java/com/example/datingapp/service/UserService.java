@@ -5,6 +5,10 @@ import com.example.datingapp.model.User;
 import com.example.datingapp.model.UserLike;
 import com.example.datingapp.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,8 +17,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor // To realizuje wstrzykiwanie zależności przez konstruktor (wymóg 3.3)
-public class UserService {
+public class UserService implements UserDetailsService {
 
+    @Autowired
     private final UserRepository userRepository;
     private final UserStatsRepository userStatsRepository;
     private final LikeRepository likeRepository;
@@ -36,6 +41,12 @@ public class UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Nie ma usera o mailu: " + email));
     }
 
     public int getUsersCountByCity(String city) {
