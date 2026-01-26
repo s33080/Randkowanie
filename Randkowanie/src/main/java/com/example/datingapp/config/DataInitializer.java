@@ -16,7 +16,7 @@ import java.util.Set;
 public class DataInitializer implements CommandLineRunner {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) {
@@ -49,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
                 .city(city)
                 .interests(interests)
                 .profileImageUrl(photoUrl)
-                .password(passwordEncoder.encode("haslo")) // TUTAJ SZYFRUJEMY HASŁO
+                .password("haslo")
                 .build();
     }
 
