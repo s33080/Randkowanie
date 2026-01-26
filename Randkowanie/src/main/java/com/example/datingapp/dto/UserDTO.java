@@ -4,6 +4,9 @@ import com.example.datingapp.model.Gender;
 import lombok.Data;
 import jakarta.validation.constraints.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 public class UserDTO {
     @NotBlank(message = "Imię jest wymagane")
@@ -13,7 +16,7 @@ public class UserDTO {
     @NotBlank(message = "E-mail nie może być pusty")
     private String email;
 
-    //@Size(min = 6, message = "Hasło musi mieć minimum 6 znaków")
+    @Size(min = 5, message = "Hasło musi mieć minimum 5 znaków")
     private String password;
 
     @Min(value = 18, message = "Musisz mieć ukończone 18 lat")
@@ -29,4 +32,6 @@ public class UserDTO {
     private String bio;
 
     private String profileImageUrl;
+
+    private Set<String> interests = new HashSet<>();
 }

@@ -9,7 +9,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6 card shadow p-4">
             <h2 class="text-center mb-4">Stwórz swój profil</h2>
-            <form th:action="@{/register}" th:object="${user}" method="post">
+            <form th:action="@{/register}" th:object="${userDto}" method="post">
                 <div class="mb-3">
                     <label class="form-label">Imię</label>
                     <input type="text" th:field="*{name}" class="form-control" required>
@@ -17,7 +17,9 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email"  autocomplete="off" th:field="*{email}" class="form-control" required>
+                            <input type="email" th:field="*{email}" class="form-control"
+                                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''" required>
+                            <div class="invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Hasło</label>
@@ -33,9 +35,14 @@
                             <option value="OTHER">Inna</option>
                         </select>
                     </div>
-                    <div class="col-md-6 mb-3">
+                    <div class="mb-3">
                         <label class="form-label">Wiek</label>
-                        <input type="number" th:field="*{age}" class="form-control" min="18">
+                        <input type="number" th:field="*{age}" class="form-control"
+                               th:classappend="${#fields.hasErrors('age')} ? 'is-invalid' : ''">
+
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('age')}" th:errors="*{age}">
+                            Błąd wieku
+                        </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Miasto</label>

@@ -1,5 +1,6 @@
 package com.example.datingapp.controller;
 
+import com.example.datingapp.dto.UserDTO;
 import com.example.datingapp.model.Gender;
 import com.example.datingapp.model.User;
 import com.example.datingapp.repository.UserRepository;
@@ -7,9 +8,11 @@ import com.example.datingapp.service.ChatService;
 import com.example.datingapp.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -143,19 +146,26 @@ public class WebViewController {
     }
 
     @GetMapping("/register")
-    public String showRegisterForm(Model model) {
-        model.addAttribute("user", new User());
-        // Lista dostępnych tagów
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("userDto", new UserDTO());
         model.addAttribute("allInterests", availableInterests);
+
         return "register";
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute User user) {
-        // Zapisujemy użytkownika i wracamy na stronę główną
-        userService.saveUser(user);
-        return "redirect:/?currentUserId=" + user.getId();
+    public String registerUser(@Valid @ModelAttribute("userDto") UserDTO userDto,
+                               BindingResult bindingResult,
+                               Model model) {
+
+    // Jeśli są błędy (np. wiek < 18), wróć do formularza
+    if (bindingResult.hasErrors()) {
+        return "register"; // Zwróć widok rejestracji, Spring sam przekaże błędy
     }
+
+    userService.registerNewUser(userDto);
+    return "redirect:/login?registered=true";
+}
 
     @GetMapping("/matches")
     public String showMatches(@RequestParam Long currentUserId, Model model) {
