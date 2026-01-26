@@ -77,7 +77,6 @@ public class UserService implements UserDetailsService {
         if (likeRepository.existsByLikerAndLiked(liked, liker)) {
             return "MATCH!";
         }
-
         return "Polubiono użytkownika!";
     }
     @Transactional
@@ -101,7 +100,6 @@ public class UserService implements UserDetailsService {
 //        // Stare
 //    }
 
-
     public List<User> getUserMatches(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new RuntimeException("Użytkownik nie istnieje");
@@ -116,10 +114,6 @@ public class UserService implements UserDetailsService {
         }
         userRepository.deleteById(id);
     }
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
 
     public List<User> getSmartRecommendations(Long userId) {
         User currentUser = userRepository.findById(userId).orElseThrow();
@@ -150,12 +144,8 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika o ID: " + id));
     }
 
-    public User saveUser(User user) {
-        return userRepository.save(user);
-    }
-
     public List<User> getMatches(Long userId) {
-        // Pobieramy ID osób, które polubił  użytkownik
+        // Pobieramy ID osób, które polubił użytkownik
         List<Long> likedByMe = userRepository.findLikedUserIds(userId);
 
         // Pobieramy ID osób, które polubiły użytkownika
