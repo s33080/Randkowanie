@@ -13,7 +13,7 @@ public class UserDTO {
     @NotBlank(message = "E-mail nie może być pusty")
     private String email;
 
-    @Size(min = 6, message = "Hasło musi mieć minimum 6 znaków")
+    //@Size(min = 6, message = "Hasło musi mieć minimum 6 znaków")
     private String password;
 
     @Min(value = 18, message = "Musisz mieć ukończone 18 lat")
@@ -21,10 +21,12 @@ public class UserDTO {
     private int age;
 
     @NotNull(message = "Płeć jest wymagana")
-    private Gender gender;
+    private Gender gender; // FEMALE / MALE / OTHER
 
     @NotBlank(message = "Miasto jest wymagane")
     private String city;
+
+    private String bio;
 
     private String profileImageUrl;
 }
