@@ -53,6 +53,14 @@
                             <button type="submit" class="btn btn-success">Zapisz zmiany</button>
                         </div>
                     </form>
+
+                    <hr class="mt-5">
+                    <div class="d-flex justify-content-between align-items-center mb-5">
+                        <p class="text-muted mb-0">Chcesz odpocząć od randkowania?</p>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="btn btn-outline-dark">Wyloguj się</button>
+                        </form>
+                    </div>
                 </div>
             </div>
 
