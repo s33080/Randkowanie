@@ -1,5 +1,6 @@
 package com.example.datingapp.controller;
 
+import com.example.datingapp.model.Gender;
 import com.example.datingapp.model.User;
 import com.example.datingapp.repository.UserRepository;
 import com.example.datingapp.service.ChatService;
@@ -25,26 +26,31 @@ public class WebViewController {
     private final UserRepository userRepository;
 
     @GetMapping("/")
-    public String showUsers(Model model, Principal principal) {
+    public String showUsers(
+            @RequestParam(required = false) Gender gender,
+            @RequestParam(required = false) String city,
+            Model model, Principal principal) {
         if (principal == null) {
             return "redirect:/welcome"; // Jeśli nie jest zalogowany, wyślij na stronę startową
         }
-
-        // 1. Principal to obiekt od Spring Security, który trzyma maila zalogowanej osoby
-        String email = principal.getName();
-
-        // 2. Znajdź użytkownika w bazie po mailu
-        User currentUser = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
-
-        // 3. Przekaż jego dane i ID do widoku
+        User currentUser = userRepository.findByEmail(principal.getName()).orElseThrow();
         model.addAttribute("currentUser", currentUser);
 
-        // 4. Pobierz listę osób do wyświetlenia
+        // Pobieramy bazową listę (rekomendacje)
         List<User> users = userService.getSmartRecommendations(currentUser.getId());
+
+        // Filtrujemy listę w Javie (najszybsza metoda bez zmiany parametrów w serwisie)
+        if (gender != null) {
+            users = users.stream().filter(u -> u.getGender() == gender).toList();
+        }
+        if (city != null && !city.isBlank()) {
+            users = users.stream().filter(u -> u.getCity().equalsIgnoreCase(city)).toList();
+        }
+
         model.addAttribute("users", users);
 
-        return "index"; // Twoja nazwa pliku HTML
+        return "index";
+
     }
 
     @GetMapping("/welcome")
