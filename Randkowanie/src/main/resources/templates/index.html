@@ -16,14 +16,15 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-danger shadow-sm mb-4">
     <div class="container">
         <a class="navbar-brand fw-bold" href="/">DatingApp - Randkowanie</a>
-        <form class="d-flex align-items-center" method="get" action="/">
-            <span class="text-white me-2 small">Zaloguj jako:</span>
-            <select name="currentUserId" class="form-select form-select-sm" onchange="this.form.submit()">
-                <option value="">-- Wybierz profil --</option>
-                <option th:each="u : ${allUsers}" th:value="${u.id}" th:text="${u.name}"
-                        th:selected="${currentUser != null && u.id == currentUser.id}"></option>
-            </select>
-        </form>
+<!--        <form class="d-flex align-items-center" method="get" action="/">-->
+<!--            <span class="text-white me-2 small">Zaloguj jako:</span>-->
+            <a href="/profile/edit" class="btn btn-info">Mój profil</a>
+<!--            <select name="currentUserId" class="form-select form-select-sm" onchange="this.form.submit()">-->
+<!--                <option value="">&#45;&#45; Wybierz profil &#45;&#45;</option>-->
+<!--                <option th:each="u : ${allUsers}" th:value="${u.id}" th:text="${u.name}"-->
+<!--                        th:selected="${currentUser != null && u.id == currentUser.id}"></option>-->
+<!--            </select>-->
+<!--        </form>-->
     </div>
     <a th:if="${currentUser != null}"
        th:href="@{/matches(currentUserId=${currentUser.id})}"

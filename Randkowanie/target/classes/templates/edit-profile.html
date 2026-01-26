@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edytuj profil - MatchApp</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="mb-0">Edytuj swój profil</h3>
+                </div>
+                <div class="card-body">
+                    <form th:action="@{/profile/update}" th:object="${user}" method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label">Imię</label>
+                            <input type="text" th:field="*{name}" class="form-control" required>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Miasto</label>
+                                <input type="text" th:field="*{city}" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Płeć</label>
+                                <select th:field="*{gender}" class="form-select">
+                                    <option value="MALE">Mężczyzna</option>
+                                    <option value="FEMALE">Kobieta</option>
+                                    <option value="OTHER">Inna</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Link do zdjęcia profilowego</label>
+                            <input type="url" th:field="*{profileImageUrl}" class="form-control">
+                            <div class="mt-2 text-center" th:if="*{profileImageUrl}">
+                                <img th:src="*{profileImageUrl}" alt="Podgląd" class="rounded-circle" style="width: 100px; height: 100px; object-fit: cover;">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Bio (opowiedz o sobie)</label>
+                            <textarea th:field="*{bio}" class="form-control" rows="4" placeholder="Czym się interesujesz? Kogo szukasz?"></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="/" class="btn btn-secondary">Anuluj</a>
+                            <button type="submit" class="btn btn-success">Zapisz zmiany</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card mt-4 border-danger">
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="text-danger mb-0">Strefa niebezpieczna</h5>
+                        <small class="text-muted">Trwałe usunięcie konta z serwisu</small>
+                    </div>
+                    <form th:action="@{/profile/delete}" method="post" onsubmit="return confirm('Czy na pewno chcesz usunąć konto? Tej operacji nie da się cofnąć.');">
+                        <button type="submit" class="btn btn-outline-danger">Usuń konto</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -34,7 +34,7 @@ public class UserService implements UserDetailsService {
         User user = User.builder()
                 .name(userDto.getName())
                 .email(userDto.getEmail())
-                .password(userDto.getPassword()) // Szyfrowanie może później
+                .password(userDto.getPassword())
                 .age(userDto.getAge())
                 .gender(userDto.getGender())
                 .city(userDto.getCity())

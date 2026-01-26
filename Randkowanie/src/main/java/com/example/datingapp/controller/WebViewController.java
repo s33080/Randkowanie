@@ -53,6 +53,39 @@ public class WebViewController {
 
     }
 
+    @GetMapping("/profile/edit")
+    public String showEditProfileForm(Principal principal, Model model) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        // Pobieramy zalogowanego użytkownika
+        User user = userRepository.findByEmail(principal.getName())
+                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
+
+        model.addAttribute("user", user); // Przekazujemy obiekt do formularza
+        return "edit-profile";
+    }
+
+    @PostMapping("/profile/update")
+    public String updateProfile(@ModelAttribute("user") User updatedData, Principal principal) {
+        if (principal == null) return "redirect:/login";
+
+        User user = userRepository.findByEmail(principal.getName()).orElseThrow();
+
+        // Aktualizujemy tylko te pola, które chcemy pozwolić edytować
+        user.setName(updatedData.getName());
+        user.setCity(updatedData.getCity());
+        user.setBio(updatedData.getBio());
+        user.setProfileImageUrl(updatedData.getProfileImageUrl());
+        // Jeśli chcesz pozwolić na zmianę płci/wieku, dodaj je tutaj:
+        user.setAge(updatedData.getAge());
+        user.setGender(updatedData.getGender());
+
+        userRepository.save(user);
+        return "redirect:/?profileUpdated=true"; // Przekierowanie na główną z informacją
+    }
+
     @GetMapping("/welcome")
     public String welcome() {
         return "welcome"; //  z przyciskiem "Zaloguj" i "Zarejestruj"
