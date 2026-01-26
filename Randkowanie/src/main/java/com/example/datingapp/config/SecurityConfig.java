@@ -17,21 +17,22 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Wyłączamy CSRF dla ułatwienia testów REST API
-                .formLogin(form -> form
-                        .defaultSuccessUrl("/", true) // Po logowaniu idź na stronę główną
-                )
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/welcome", "/css/**", "/js/**").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/h2-console/**").permitAll() // Publiczne
-                        .requestMatchers("/api/v1/users/register").permitAll() // Pozwalamy każdemu się zarejestrować
-                        .requestMatchers("/error").permitAll()      //pokazuje errory
-                        .requestMatchers("/api/v1/users/stats/count").permitAll()   //pokazuje liczbe osob w danym miescie
-                        .anyRequest().authenticated() // Wszystko inne wymaga zalogowania
+                        // TE ŚCIEŻKI MUSZĄ BYĆ OTWARTE DLA WSZYSTKICH
+                        .requestMatchers("/", "/welcome", "/register", "/login", "/css/**", "/js/**").permitAll()
+                        .anyRequest().authenticated()
                 )
-                .httpBasic(withDefaults()) // Włączamy proste logowanie (Basic Auth)
-                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin())); // Potrzebne do konsoli H2
-
+                .formLogin(form -> form
+                        .loginPage("/login")      // To wskazuje na Twój plik html
+                        .permitAll()              // To pozwala wejść na stronę logowania każdemu
+                        .defaultSuccessUrl("/", true)
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/welcome")
+                        .permitAll()
+                );
         return http.build();
     }
 

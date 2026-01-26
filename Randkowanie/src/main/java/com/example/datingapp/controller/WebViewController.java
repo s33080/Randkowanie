@@ -30,16 +30,21 @@ public class WebViewController {
             @RequestParam(required = false) Gender gender,
             @RequestParam(required = false) String city,
             Model model, Principal principal) {
+
+        // 1. Jeśli nikt nie jest zalogowany, pokazujemy stronę powitalną (Landing Page)
         if (principal == null) {
-            return "redirect:/welcome"; // Jeśli nie jest zalogowany, wyślij na stronę startową
+            return "welcome"; // Zwraca plik welcome.html bez przekierowania (unikamy pętli!)
         }
+
+        // 2. Jeśli jest zalogowany, pobieramy dane
         User currentUser = userRepository.findByEmail(principal.getName()).orElseThrow();
         model.addAttribute("currentUser", currentUser);
+        model.addAttribute("selectedGender", gender);
+        model.addAttribute("selectedCity", city);
 
-        // Pobieramy bazową listę (rekomendacje)
         List<User> users = userService.getSmartRecommendations(currentUser.getId());
 
-        // Filtrujemy listę w Javie (najszybsza metoda bez zmiany parametrów w serwisie)
+        // 3. Filtrowanie (Java Stream)
         if (gender != null) {
             users = users.stream().filter(u -> u.getGender() == gender).toList();
         }
@@ -48,9 +53,12 @@ public class WebViewController {
         }
 
         model.addAttribute("users", users);
+        return "index"; // Pokazuje stronę główną dla zalogowanych
+    }
 
-        return "index";
-
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login"; // Zwraca login.html
     }
 
     @GetMapping("/profile/edit")
