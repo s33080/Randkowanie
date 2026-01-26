@@ -6,6 +6,8 @@ import com.example.datingapp.model.User;
 import com.example.datingapp.repository.UserRepository;
 import com.example.datingapp.service.RecommendationService;
 import com.example.datingapp.service.UserService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -75,12 +77,18 @@ public class UserController {
         return ResponseEntity.ok("Użytkownik o ID " + id + " oraz wszystkie jego dane (lajki, wiadomości) zostały usunięte.");
     }
 
-    @PostMapping("/delete-my-account")
-    public String deleteAccount(Principal principal) {
-        // Spring sam wie kto jest zalogowany dzięki Basic Auth
-        String email = principal.getName();
-        User user = userRepository.findByEmail(email).get();
-        userService.deleteUser(user.getId());
+    @PostMapping("/profile/delete")
+    public String deleteAccount(Principal principal, HttpServletRequest request) throws ServletException {
+        if (principal != null) {
+            String email = principal.getName();
+            User user = userRepository.findByEmail(email).orElseThrow();
+
+            // USUWANIE: Tu może być problem z kluczami obcymi
+            userRepository.delete(user);
+
+            // Wylogowanie użytkownika po usunięciu konta, żeby sesja nie wisiała
+            request.logout();
+        }
         return "redirect:/welcome?deleted=true";
     }
 }

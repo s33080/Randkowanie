@@ -5,6 +5,8 @@ import com.example.datingapp.model.User;
 import com.example.datingapp.repository.UserRepository;
 import com.example.datingapp.service.ChatService;
 import com.example.datingapp.service.UserService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -92,6 +94,32 @@ public class WebViewController {
 
         userRepository.save(user);
         return "redirect:/?profileUpdated=true"; // Przekierowanie na główną z informacją
+    }
+
+    @PostMapping("/profile/delete")
+    public String deleteAccount(Principal principal, HttpServletRequest request) {
+        if (principal == null) {
+            return "redirect:/login";
+        }
+
+        String email = principal.getName();
+        System.out.println("LOG: Próba usunięcia użytkownika: " + email); // To sprawdzi, czy w ogóle tu wchodzisz
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
+
+        // 1. Najpierw usuwamy sesję użytkownika
+        try {
+            request.logout();
+        } catch (ServletException e) {
+            System.out.println("LOG: Błąd wylogowywania: " + e.getMessage());
+        }
+
+        // 2. Usuwamy z bazy
+        userRepository.delete(user);
+        System.out.println("LOG: Użytkownik usunięty z bazy.");
+
+        return "redirect:/welcome?deleted=true";
     }
 
     @GetMapping("/welcome")
