@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -26,6 +27,12 @@ public class WebViewController {
     private final UserService userService;
     private final ChatService chatService;
     private final UserRepository userRepository;
+
+    private final List<String >availableInterests = List.of(
+            "Sport", "Kino", "Podróże", "Informatyka",
+            "Gry", "Książki", "Gotowanie", "Muzyka", "Fotografia",
+            "DIY", "Medycyna", "Psychologia", "Zwierzęta", "Psy",
+            "Koty", "Akwarystyka", "Wędkowanie", "Motoryzacja");
 
     @GetMapping("/")
     public String showUsers(
@@ -74,23 +81,31 @@ public class WebViewController {
                 .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
 
         model.addAttribute("user", user); // Przekazujemy obiekt do formularza
+        model.addAttribute("allInterests", availableInterests);
         return "edit-profile";
     }
 
     @PostMapping("/profile/update")
-    public String updateProfile(@ModelAttribute("user") User updatedData, Principal principal) {
+    public String updateProfile(@ModelAttribute("user") User updatedData,
+                                @RequestParam(value = "selectedInterests", required = false) List<String> selectedInterests,
+                                Principal principal) {
         if (principal == null) return "redirect:/login";
 
         User user = userRepository.findByEmail(principal.getName()).orElseThrow();
 
-        // Aktualizujemy tylko te pola, które chcemy pozwolić edytować
         user.setName(updatedData.getName());
         user.setCity(updatedData.getCity());
         user.setBio(updatedData.getBio());
         user.setProfileImageUrl(updatedData.getProfileImageUrl());
-        // Jeśli chcesz pozwolić na zmianę płci/wieku, dodaj je tutaj:
         user.setAge(updatedData.getAge());
         user.setGender(updatedData.getGender());
+
+        // Aktualizacja zainteresowań
+        if (selectedInterests != null) {
+            user.setInterests(new HashSet<>(selectedInterests));
+        } else {
+            user.setInterests(new HashSet<>()); // Jeśli nic nie zaznaczono, czyścimy listę
+        }
 
         userRepository.save(user);
         return "redirect:/?profileUpdated=true"; // Przekierowanie na główną z informacją
@@ -131,11 +146,7 @@ public class WebViewController {
     public String showRegisterForm(Model model) {
         model.addAttribute("user", new User());
         // Lista dostępnych tagów
-        model.addAttribute("allInterests", List.of(
-                "Sport", "Kino", "Podróże", "Informatyka",
-                "Gry", "Książki", "Gotowanie", "Muzyka", "Fotografia",
-                "DIY", "Medycyna", "Psychologia", "Zwierzęta", "Psy",
-                "Koty", "Akwarystyka", "Wędkowanie", "Motoryzacja"));
+        model.addAttribute("allInterests", availableInterests);
         return "register";
     }
 

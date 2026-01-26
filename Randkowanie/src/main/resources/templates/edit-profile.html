@@ -48,6 +48,21 @@
                             <textarea th:field="*{bio}" class="form-control" rows="4" placeholder="Czym się interesujesz? Kogo szukasz?"></textarea>
                         </div>
 
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Twoje zainteresowania</label>
+                            <div class="d-flex flex-wrap gap-3 p-3 bg-light rounded border">
+                                <div th:each="interest : ${allInterests}" class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="selectedInterests"
+                                           th:value="${interest}"
+                                           th:id="${'interest-' + interest}"
+                                           th:checked="${user.interests.contains(interest)}">
+                                    <label class="form-check-label" th:for="${'interest-' + interest}" th:text="${interest}"></label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="d-flex justify-content-between">
                             <a href="/" class="btn btn-secondary">Anuluj</a>
                             <button type="submit" class="btn btn-success">Zapisz zmiany</button>
