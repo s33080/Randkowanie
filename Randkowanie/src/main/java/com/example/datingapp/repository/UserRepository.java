@@ -37,6 +37,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<Long> findUserIdsWhoLikedMe(@Param("userId") Long userId);
 }
 /*
-JpaRepository dostarcza gotowe operacje CRUD (Create, Read, Update, Delete),
-więc nie trzeba pisać SQL ręcznie dla prostych zadań
+JpaRepository dostarcza gotowe operacje CRUD (Create, Read, Update, Delete)
 */
