@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-class UserServiceTest {
+class UserServiceSaveUserTest {
 
     private UserService userService;
     private FakeUserRepository fakeUserRepository;

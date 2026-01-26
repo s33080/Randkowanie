@@ -24,11 +24,7 @@ public class UserService implements UserDetailsService {
     private final UserStatsRepository userStatsRepository;
     private final LikeRepository likeRepository;
 
-    @Transactional // Zapewnia spójność danych (wymóg 3.2)
-    /*
-    @Transactional: Gwarantuje, że jeśli w metodzie dzieją się dwie operacje na bazie
-    i jedna się nie uda, to obie zostaną wycofane (Rollback)
-     */
+    @Transactional
     public User registerNewUser(UserDTO userDto) {
         // Mapujemy DTO na Encję
         User user = User.builder()
@@ -91,14 +87,6 @@ public class UserService implements UserDetailsService {
 
         likeRepository.save(dislike);
     }
-
-//    @Transactional
-//    public void setProfileImage(Long userId, String fileName) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new RuntimeException("Użytkownik nie istnieje"));
-//        user.setImagePath(fileName);
-//        // Stare
-//    }
 
     public List<User> getUserMatches(Long userId) {
         if (!userRepository.existsById(userId)) {
