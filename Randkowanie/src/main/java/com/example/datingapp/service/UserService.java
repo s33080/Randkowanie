@@ -34,6 +34,9 @@ public class UserService implements UserDetailsService {
                 .age(userDto.getAge())
                 .gender(userDto.getGender())
                 .city(userDto.getCity())
+                .bio(userDto.getBio())
+                .profileImageUrl(userDto.getProfileImageUrl())
+                .interests(userDto.getInterests())
                 .build();
 
         return userRepository.save(user);
