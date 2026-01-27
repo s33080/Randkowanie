@@ -65,6 +65,7 @@ class UserDTOTest {
         userDto.setName("Maria");
         userDto.setEmail("maria@test.pl");
         userDto.setCity("Moscow");
+        userDto.setGender(Gender.MALE);
         userDto.setAge(15); // Min to 18
 
         // Act

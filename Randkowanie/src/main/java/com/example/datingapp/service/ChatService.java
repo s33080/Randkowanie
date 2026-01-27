@@ -26,7 +26,6 @@ public class ChatService {
         User recipient = userRepository.findById(recipientId)
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono odbiorcy"));
 
-        // Kluczowa blokada biznesowa:
         boolean isMatch = likeRepository.existsByLikerAndLiked(sender, recipient) &&
                 likeRepository.existsByLikerAndLiked(recipient, sender);
 

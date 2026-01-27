@@ -181,13 +181,12 @@ public class WebViewController {
     public String openChat(@RequestParam Long from, @RequestParam Long to,
       /*                     @ModelAttribute("chatStatus") String chatStatus,*/
                            Model model) {
-        // 1. Pobierz historię z Twojego serwisu
         model.addAttribute("messages", chatService.getChatHistory(from, to));
 
-        // 2. Pobierz dane osób (używamy Twojego userService)
+        // Pobierz dane osób (userService)
         model.addAttribute("me", userService.getUserById(from));
         model.addAttribute("partner", userService.getUserById(to));
-        return "chat"; // musi być plik chat.html
+        return "chat";
     }
 
     @PostMapping("/chat/send")
@@ -195,10 +194,8 @@ public class WebViewController {
                               @RequestParam String content,
                               RedirectAttributes redirectAttributes) {
 
-        // Wywołujemy Twoją metodę z blokadą isMatch
         String result = chatService.sendMessage(from, to, content);
 
-        // Przekazujemy komunikat (np. o błędzie braku matcha) na stronę
         redirectAttributes.addFlashAttribute("message", result);
 
         return "redirect:/chat?from=" + from + "&to=" + to;
@@ -206,10 +203,10 @@ public class WebViewController {
 
     @GetMapping("/like")
     public String likeUser(@RequestParam Long likerId, @RequestParam Long likedId) {
-        // 1. Dodaj lajk do bazy (użyj metody, którą już masz w serwisie)
+        // Dodaj lajk do bazy
         userService.likeUser(likerId, likedId);
 
-        // 2. PRZEKIEROWANIE: Wróć na stronę główną jako Ty
+        // PRZEKIEROWANIE: Wróć na stronę główną jako Ty
         // Dzięki temu getSmartRecommendations odpali się jeszcze raz i ukryje tę osobę
         return "redirect:/?currentUserId=" + likerId;
     }
@@ -219,5 +216,4 @@ public class WebViewController {
         userService.rejectUser(likerId, likedId);
         return "redirect:/?currentUserId=" + likerId;
     }
-
 }

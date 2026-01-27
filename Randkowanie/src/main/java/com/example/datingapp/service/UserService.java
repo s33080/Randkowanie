@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor // To realizuje wstrzykiwanie zależności przez konstruktor (wymóg 3.3)
+@RequiredArgsConstructor // To realizuje wstrzykiwanie zależności przez konstruktor
 public class UserService implements UserDetailsService {
 
     @Autowired
@@ -26,7 +26,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public User registerNewUser(UserDTO userDto) {
-        // Mapujemy DTO na Encję
+        // Mapuje DTO na Encję
         User user = User.builder()
                 .name(userDto.getName())
                 .email(userDto.getEmail())

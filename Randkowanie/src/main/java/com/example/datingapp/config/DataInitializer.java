@@ -20,7 +20,6 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // Czyścimy i dodajemy na nowo, jeśli chcesz odświeżyć dane (opcjonalnie)
         if (userRepository.count() == 0) {
 
             User u1 = createUser("maria@test.com", "Maria", 23, Gender.FEMALE, "Warszawa",
@@ -43,7 +42,6 @@ public class DataInitializer implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e",
                     "Zawsze w podróży. Od Tatr po Azję. Szukam towarzyszki do kolejnej wyprawy.");
 
-            // Używamy List.of zamiast Set.of dla zachowania stabilności zapisu
             userRepository.saveAll(List.of(u1, u2, u3, u4));
             System.out.println("--- Dane testowe zostały załadowane ---");
         }

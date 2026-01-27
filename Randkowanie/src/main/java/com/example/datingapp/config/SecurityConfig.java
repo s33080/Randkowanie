@@ -18,13 +18,14 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                //pozwala niezalogowanym zobaczyć strony
                 .authorizeHttpRequests(auth -> auth
-                        // TE ŚCIEŻKI MUSZĄ BYĆ OTWARTE DLA WSZYSTKICH
                         .requestMatchers("/", "/welcome", "/register", "/login", "/css/**", "/js/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                //Mój formularz login
                 .formLogin(form -> form
-                        .loginPage("/login")      // To wskazuje na Twój plik html
+                        .loginPage("/login")
                         .permitAll()              // To pozwala wejść na stronę logowania każdemu
                         .defaultSuccessUrl("/", true)
                 )

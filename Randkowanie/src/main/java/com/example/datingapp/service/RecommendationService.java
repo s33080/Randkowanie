@@ -18,10 +18,8 @@ public class RecommendationService {
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Nie znaleziono użytkownika"));
 
-        // Wybór: parametr ze Swaggera lub domyślny z bazy
         Gender finalGender = (targetGender != null) ? targetGender : currentUser.getPreferredGender();
 
-        // Jeśli wciąż null (użytkownik nic nie wybrał), automatycznie konserwatywnie
         if (finalGender == null) {
             finalGender = (currentUser.getGender() == Gender.MALE) ? Gender.FEMALE : Gender.MALE;
         }

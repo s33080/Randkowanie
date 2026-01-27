@@ -10,20 +10,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.*;
 
-@Entity // Mówi Springowi, że ta klasa to tabela w bazie danych (wymóg 1.1)
+@Entity // Mówi Springowi, że ta klasa to tabela w bazie danych
 @Table(name = "users") // Nadaje nazwę tabeli w SQL
 // Lombok: generuje metody dostępowe, by nie pisać ich ręcznie
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder // User.builder().name("Mary").build()
+@Builder
 public class User implements UserDetails {
 
     @Id //klucz główny
     @GeneratedValue(strategy = GenerationType.IDENTITY) //numeracja automatyczna
     private Long id;
-    @Email(message = "Niepoprawny format adresu e-mail") // Walidacja formatu e-mail (wymóg 3.1)
+    @Email(message = "Niepoprawny format adresu e-mail")
     @NotBlank(message = "E-mail nie może być pusty")
     @Column(nullable = false, unique = true) //unikalny email o wzorze coś@jakiśmail.com
     private String email;

@@ -15,7 +15,7 @@ CREATE TABLE users (
                        preferred_city VARCHAR(100)
 );
 
--- 2. Zainteresowania (Kluczowe dla algorytmu!)
+-- 2. Zainteresowania
 CREATE TABLE user_interests (
                                 user_id BIGINT REFERENCES users(id) ON DELETE CASCADE,
                                 interest VARCHAR(100)

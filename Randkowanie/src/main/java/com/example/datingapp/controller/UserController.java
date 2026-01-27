@@ -67,7 +67,6 @@ public class UserController {
             @RequestParam(required = false) Integer maxAge,
             @RequestParam(required = false) String city) {
 
-        // To wywołuje logikę z serwisu
         return ResponseEntity.ok(recommendationService.getRecommendations(id, targetGender, minAge, maxAge, city));
     }
 
